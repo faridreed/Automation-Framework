@@ -1,5 +1,6 @@
 import pytest
 import os
+import time
 from pageObjects.HomePage import HomePage
 from pageObjects.Login_Reg_Page import Login_Reg_Page
 from pageObjects.RegistrationPage import RegistrationPage
@@ -17,6 +18,7 @@ class Test_001_RegisterUser:
         self.driver.get(self.baseUrl)
         self.driver.maximize_window()
 
+
         self.hp = HomePage(self.driver)
         self.hp.HomePageExists()
         self.hp.click_reg_login()
@@ -24,15 +26,15 @@ class Test_001_RegisterUser:
         self.lp = Login_Reg_Page(self.driver)
         self.lp.NewUserSignUpExists()
         self.lp.register_name('Fred')
-        self.lp.register_email('fred123@gmail.com')
+        self.lp.register_email('freddy444@gmail.com')
         self.lp.click_reg_button()
+
 
         self.rp = RegistrationPage(self.driver)
         self.rp.select_gender('Mr.')
         self.rp.write_name('Fred')
-        self.rp.write_email('fred123@gmail.com')
         self.rp.write_password('jkluio;;')
-        self.rp.select_birthday_day(26)
+        self.rp.select_birthday_day('26')
         self.rp.select_birthday_month('March')
         self.rp.select_birthday_year('1990')
         self.rp.click_newsletter()
@@ -42,7 +44,18 @@ class Test_001_RegisterUser:
         self.rp.write_company('Google')
         self.rp.write_address1('123 Jacksonville Dr.')
         self.rp.write_address2('456 Jacksonville Dr.')
-        self.rp.select_country('Azerbaijan')
+        self.rp.select_country('United States')
+        self.rp.write_state('Texas')
         self.rp.write_city('Baku')
         self.rp.write_zipcode('1001')
         self.rp.write_mobile_number('9855885842')
+        self.rp.click_create_account()
+        self.rp.click_continue()
+
+
+        assert self.hp.ensure_home(), "Could not reach Home (vignette/ad kept redirecting)"
+        self.hp.close_home_ad()
+        self.hp.LoggedInExists()
+        self.hp.delete_account()
+        self.hp.account_deleted_confirmation()
+        self.hp.continue_after_deleting()
