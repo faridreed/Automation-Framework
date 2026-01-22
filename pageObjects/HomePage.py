@@ -17,26 +17,39 @@ class HomePage:
     lnk_loggedin_xpath = "//li[10]//a[1]"
     button_delete_acc_xpath = "//a[normalize-space()='Delete Account']"
     txt_account_deleted_xpath = "//b[normalize-space()='Account Deleted!']"
+    button_logout_xpath = "//a[normalize-space()='Logout']"
+
 
     def __init__(self, driver):
         self.driver = driver
 
     def click_home(self):
         self.driver.find_element(By.XPATH, self.lnk_home_xpath).click()
+
     def click_products(self):
         self.driver.find_element(By.XPATH, self.lnk_products_xpath).click()
+
     def click_cart(self):
         self.driver.find_element(By.XPATH, self.lnk_cart_xpath).click()
+
     def click_reg_login(self):
         self.driver.find_element(By.XPATH, self.lnk_reg_login_xpath).click()
+
+    def click_logout(self):
+        self.driver.find_element(By.XPATH, self.button_logout_xpath).click()
+
     def click_tcases(self):
         self.driver.find_element(By.XPATH, self.lnk_tcases_xpath).click()
+
     def click_apitest(self):
         self.driver.find_element(By.XPATH, self.lnk_apitest_xpath).click()
+
     def click_video_tut(self):
         self.driver.find_element(By.XPATH, self.lnk_video_tut_xpath).click()
+
     def click_contact(self):
         self.driver.find_element(By.XPATH, self.lnk_contact_xpath).click()
+
     def HomePageExists(self):
        try:
            self.driver.find_element(By.XPATH, self.txt_confirmation_xpath).is_displayed()
@@ -57,6 +70,7 @@ class HomePage:
             self.driver.find_element(By.XPATH, self.txt_account_deleted_xpath).is_displayed()
         except:
             return False
+
 
     def continue_after_deleting(self):
         self.driver.find_element(By.XPATH, "//a[normalize-space()='Continue']").click()

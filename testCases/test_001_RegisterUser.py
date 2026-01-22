@@ -25,15 +25,15 @@ class Test_001_RegisterUser:
 
         self.lp = Login_Reg_Page(self.driver)
         self.lp.NewUserSignUpExists()
-        self.lp.register_name('Fred')
-        self.lp.register_email('freddy444@gmail.com')
+        self.lp.register_name('Freddy')
+        self.lp.register_email('freddy777@gmail.com')
         self.lp.click_reg_button()
 
 
         self.rp = RegistrationPage(self.driver)
         self.rp.select_gender('Mr.')
         self.rp.write_name('Fred')
-        self.rp.write_password('jkluio;;')
+        self.rp.write_password('freddy777')
         self.rp.select_birthday_day('26')
         self.rp.select_birthday_month('March')
         self.rp.select_birthday_year('1990')
