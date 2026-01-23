@@ -2,9 +2,12 @@ from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import NoSuchElementException
+import time
 
 
 class HomePage:
+
     lnk_home_xpath = "//a[normalize-space()='Home']"
     lnk_products_xpath = "//a[@href='/products']"
     lnk_cart_xpath = "//a[@href='/view_cart']"
@@ -52,13 +55,13 @@ class HomePage:
 
     def HomePageExists(self):
        try:
-           self.driver.find_element(By.XPATH, self.txt_confirmation_xpath).is_displayed()
+           return self.driver.find_element(By.XPATH, self.txt_confirmation_xpath).is_displayed()
        except:
            return False
 
     def LoggedInExists(self):
         try:
-            self.driver.find_element(By.XPATH, self.lnk_loggedin_xpath).is_displayed()
+            return self.driver.find_element(By.XPATH, self.lnk_loggedin_xpath).is_displayed()
         except:
             return False
 
@@ -67,7 +70,7 @@ class HomePage:
 
     def account_deleted_confirmation(self):
         try:
-            self.driver.find_element(By.XPATH, self.txt_account_deleted_xpath).is_displayed()
+            return self.driver.find_element(By.XPATH, self.txt_account_deleted_xpath).is_displayed()
         except:
             return False
 
@@ -126,6 +129,42 @@ class HomePage:
             document.documentElement.style.overflow = 'auto';
             document.body.style.overflow = 'auto';
         """)
+
+    def clean_google_ads(self):
+        # Remove google vignette fragment WITHOUT reloading
+        url = self.driver.current_url
+        if "google_vignette" in url:
+            self.driver.execute_script(
+                "history.replaceState(null, '', arguments[0]);",
+                url.split("#")[0]
+            )
+
+        # Remove only google-related ad iframes + aswift wrappers
+        self.driver.execute_script("""
+            document.querySelectorAll('iframe').forEach(f => {
+                const src = (f.getAttribute('src') || '').toLowerCase();
+                const id  = (f.getAttribute('id')  || '').toLowerCase();
+
+                const isGoogleAd =
+                    src.includes('googleads') ||
+                    src.includes('doubleclick') ||
+                    src.includes('googlesyndication') ||
+                    id.startsWith('google_ads_iframe') ||
+                    id.startsWith('aswift');
+
+                if (isGoogleAd) {
+                    const p = f.parentElement;
+                    f.remove();
+                    if (p && p.id && p.id.toLowerCase().startsWith('aswift_')) p.remove();
+                }
+            });
+
+            document.querySelectorAll("div[id^='aswift_']").forEach(d => d.remove());
+
+            document.documentElement.style.overflow = 'auto';
+            document.body.style.overflow = 'auto';
+        """)
+
 
 
 

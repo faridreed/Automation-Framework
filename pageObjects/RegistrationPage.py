@@ -43,9 +43,9 @@ class RegistrationPage:
     # Account Information
 
     def select_gender(self,gender):
-        if gender == 'Mr.' or 'Mr' or 'Mister':
+        if gender in ['Mr.', 'Mr', 'Mister']:
             self.driver.find_element(By.ID, self.button_mr_id).click()
-        if gender == 'Mrs.' or 'Mrs' or 'Mistress':
+        elif gender in ['Mrs.', 'Mrs', 'Mistress']:
             self.driver.find_element(By.ID, self.button_mrs_id).click()
 
     def write_name(self,name):
@@ -127,7 +127,7 @@ class RegistrationPage:
 
     def account_created_exists(self):
         try:
-            self.driver.find_element(By.XPATH, self.txt_account_created_xpath).is_displayed()
+            return self.driver.find_element(By.XPATH, self.txt_account_created_xpath).is_displayed()
         except:
             return False
 

@@ -20,13 +20,13 @@ class Test_001_RegisterUser:
 
 
         self.hp = HomePage(self.driver)
-        self.hp.HomePageExists()
+        assert self.hp.HomePageExists(),"Home Page is not visible"
         self.hp.click_reg_login()
 
         self.lp = Login_Reg_Page(self.driver)
-        self.lp.NewUserSignUpExists()
+        assert self.lp.NewUserSignUpExists(),"New User Signup is not visible"
         self.lp.register_name('Freddy')
-        self.lp.register_email('freddy777@gmail.com')
+        self.lp.register_email('freddy000@gmail.com')
         self.lp.click_reg_button()
 
 
@@ -55,7 +55,7 @@ class Test_001_RegisterUser:
 
         assert self.hp.ensure_home(), "Could not reach Home (vignette/ad kept redirecting)"
         self.hp.close_home_ad()
-        self.hp.LoggedInExists()
+        assert self.hp.LoggedInExists(),"Logged in text is not there"
         self.hp.delete_account()
-        self.hp.account_deleted_confirmation()
+        assert self.hp.account_deleted_confirmation(),"Account not deleted"
         self.hp.continue_after_deleting()

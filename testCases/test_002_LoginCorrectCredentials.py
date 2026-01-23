@@ -12,23 +12,23 @@ class Test_002_Correct_Login:
     logger = LogGen.getLogger()
 
     def test_correct_login(self,setup):
-        self.logger.info("***test_001_AccountRegistration started***")
+        self.logger.info("***test_002_CorrectLogin started***")
         self.driver = setup
         self.logger.info("***Launching Application***")
         self.driver.get(self.baseUrl)
         self.driver.maximize_window()
 
         self.hp = HomePage(self.driver)
-        self.hp.HomePageExists()
+        assert self.hp.HomePageExists(),"Home page is not visible"
         self.hp.click_reg_login()
 
         self.lp = Login_Reg_Page(self.driver)
-        self.lp.LoginExists()
+        assert self.lp.LoginExists(),"Login text is not visible"
         self.lp.login_email('freddy777@gmail.com')
         self.lp.login_password('freddy777')
         self.lp.click_login_button()
 
-        self.hp.LoggedInExists()
+        assert self.hp.LoggedInExists(),"Logged in text is not visible"
         self.hp.delete_account()
-        self.hp.account_deleted_confirmation()
+        assert self.hp.account_deleted_confirmation(),"Account not deleted"
 

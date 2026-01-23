@@ -39,24 +39,24 @@ class Login_Reg_Page:
 
     def NewUserSignUpExists(self):
         try:
-            self.driver.find_element(By.XPATH, self.txt_new_user_signup_xpath).is_displayed()
+            return self.driver.find_element(By.XPATH, self.txt_new_user_signup_xpath).is_displayed()
         except:
             return False
 
     def LoginExists(self):
         try:
-            self.driver.find_element(By.XPATH, self.txt_login_to_account_xpath).is_displayed()
+            return self.driver.find_element(By.XPATH, self.txt_login_to_account_xpath).is_displayed()
         except:
             return False
 
     def IncorrectEmailOrPasswordVisible(self):
         try:
-            self.driver.find_element(By.XPATH, self.txt_incorrect_email_pass_xpath).is_displayed()
+            return self.driver.find_element(By.XPATH, self.txt_incorrect_email_pass_xpath).is_displayed()
         except:
             return False
 
     def EmailAlreadyExistsVisible(self):
         try:
-            self.driver.find_element(By.XPATH, self.txt_email_exists_xpath).is_displayed()
+            return self.driver.find_element(By.XPATH, self.txt_email_exists_xpath).is_displayed()
         except:
             return False
