@@ -1,4 +1,5 @@
 from selenium.common import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -21,6 +22,11 @@ class HomePage:
     button_delete_acc_xpath = "//a[normalize-space()='Delete Account']"
     txt_account_deleted_xpath = "//b[normalize-space()='Account Deleted!']"
     button_logout_xpath = "//a[normalize-space()='Logout']"
+    foooter_xpath = "//footer[@id='footer']"
+    txt_subscription_xpath = "//h2[normalize-space()='Subscription']"
+    txtbox_subscription_xpath = "//input[@id='susbscribe_email']"
+    button_subscription_xpath = "//i[@class='fa fa-arrow-circle-o-right']"
+    txt_subscription_alert_xpath = "//div[@class='alert-success alert']"
 
 
     def __init__(self, driver):
@@ -53,6 +59,38 @@ class HomePage:
     def click_contact(self):
         self.driver.find_element(By.XPATH, self.lnk_contact_xpath).click()
 
+    def scroll_to_target(self, target):
+        scroll = self.driver.find_element(By.XPATH, target)
+        self.driver.execute_script("arguments[0].scrollIntoView();", scroll)
+
+    def scroll_to_bottom(self):
+        self.driver.execute_script("window.scrollBy(0, document.body.scrollHeight)")
+
+    def scroll_to_top(self):
+        self.driver.execute_script("window.scrollBy(0, -document.body.scrollHeight)")
+
+    def mouse_hover_click(self, target):
+        wait = WebDriverWait(self.driver, 10)
+        el = wait.until(EC.presence_of_element_located((By.XPATH, target)))
+        self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", el)
+
+        act = ActionChains(self.driver)
+        try:
+            act.move_to_element(el).pause(0.2).click(el).perform()
+        except Exception:
+            self.driver.execute_script("arguments[0].click();", el)
+
+    def click_alert(self):
+        WebDriverWait(self.driver, 10).until(EC.alert_is_present())
+        self.driver.switch_to.alert.accept()
+
+    def write_subscription_email(self, email):
+        self.driver.find_element(By.XPATH, self.txtbox_subscription_xpath).send_keys(email)
+
+    def click_subcription_button(self):
+        self.driver.find_element(By.XPATH, self.button_subscription_xpath).click()
+
+
     def HomePageExists(self):
        try:
            return self.driver.find_element(By.XPATH, self.txt_confirmation_xpath).is_displayed()
@@ -63,6 +101,23 @@ class HomePage:
         try:
             return self.driver.find_element(By.XPATH, self.lnk_loggedin_xpath).is_displayed()
         except:
+            return False
+
+    def SubscriptionTextExists(self):
+        try:
+            return self.driver.find_element(By.XPATH, self.txt_subscription_xpath).is_displayed()
+        except:
+            return False
+
+    def SubscriptionSuccessAlertExists(self, timeout=10):
+        try:
+            alert = WebDriverWait(self.driver,timeout).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, self.txt_subscription_alert_xpath)
+                )
+            )
+            return alert.is_displayed()
+        except TimeoutException:
             return False
 
     def delete_account(self):
