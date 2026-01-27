@@ -27,10 +27,20 @@ class HomePage:
     txtbox_subscription_xpath = "//input[@id='susbscribe_email']"
     button_subscription_xpath = "//i[@class='fa fa-arrow-circle-o-right']"
     txt_subscription_alert_xpath = "//div[@class='alert-success alert']"
+    lnk_first_product_xpath = "(//a[contains(text(),'View Product')])[1]"
+    button_first_product_cart_xpath = "(//a[@class='btn btn-default add-to-cart'][normalize-space()='Add to cart'])[1]"
+    button_continue_shop_xpath = "//button[normalize-space()='Continue Shopping']"
+
 
 
     def __init__(self, driver):
         self.driver = driver
+
+    def click(self, target):
+        self.driver.find_element(By.XPATH, target).click()
+
+    def click_first_product(self):
+        self.driver.find_element(By.XPATH, self.lnk_first_product_xpath).click()
 
     def click_home(self):
         self.driver.find_element(By.XPATH, self.lnk_home_xpath).click()
