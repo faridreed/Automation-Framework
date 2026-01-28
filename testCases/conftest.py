@@ -11,6 +11,8 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
 
+os.environ["WDM_LOCAL"] = "1"
+os.environ["WDM_CACHE_DIR"] = r"C:\wdm-cache"
 
 @pytest.fixture
 def setup(browser):
@@ -26,14 +28,9 @@ def setup(browser):
         print("Launching Chrome")
 
     else:
-        opts = FirefoxOptions()
-        opts.add_argument("-headless")  # recommended for Jenkins
         serv_obj = FirefoxService(GeckoDriverManager().install())
-        driver = webdriver.Firefox(service=serv_obj, options=opts)
+        driver = webdriver.Firefox(service=serv_obj)
         print("Launching Firefox")
-
-        yield driver
-        driver.quit()
 
 def pytest_addoption(parser):     # Getting the value from CLI/Hooks
     parser.addoption("--browser")
