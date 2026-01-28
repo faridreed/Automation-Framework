@@ -12,7 +12,7 @@ class Test_001_RegisterUser:
     logger = LogGen.getLogger()
 
     def test_register_user(self, setup):
-        self.logger.info("***test_0002_AccountRegistration started***")
+        self.logger.info("***test_002_AccountRegistration started***")
         self.driver = setup
         self.logger.info("***Launching Application***")
         self.driver.get(self.baseUrl)
@@ -26,7 +26,7 @@ class Test_001_RegisterUser:
         self.lp = Login_Reg_Page(self.driver)
         assert self.lp.NewUserSignUpExists(),"New User Signup is not visible"
         self.lp.register_name('Freddy')
-        self.lp.register_email('freddy0001@gmail.com')
+        self.lp.register_email('freddy0003@gmail.com')
         self.lp.click_reg_button()
 
 

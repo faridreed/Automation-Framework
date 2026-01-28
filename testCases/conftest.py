@@ -1,3 +1,4 @@
+import os
 import datetime
 import os.path
 import pytest
@@ -7,28 +8,32 @@ from webdriver_manager.core import driver
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.firefox.service import Service as FirefoxService
 
 
 @pytest.fixture
 def setup(browser):
 
-    if browser == "edge":
+    if browser == "chrome":
         serv_obj = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=serv_obj)
         print("Launching Edge")
 
-    elif browser == "chrome":
+    elif browser == "edge":
         serv_obj = Service(EdgeChromiumDriverManager().install())
         driver = webdriver.Edge(service=serv_obj)
         print("Launching Chrome")
 
     else:
-        serv_obj = Service(GeckoDriverManager().install())
-        driver = webdriver.Firefox(service=serv_obj)
+        opts = FirefoxOptions()
+        opts.add_argument("-headless")  # recommended for Jenkins
+        serv_obj = FirefoxService(GeckoDriverManager().install())
+        driver = webdriver.Firefox(service=serv_obj, options=opts)
         print("Launching Firefox")
 
-
-    return driver
+        yield driver
+        driver.quit()
 
 def pytest_addoption(parser):     # Getting the value from CLI/Hooks
     parser.addoption("--browser")
