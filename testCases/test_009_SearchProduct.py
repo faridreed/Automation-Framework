@@ -32,11 +32,11 @@ class Test_009_SearchProduct:
 
         self.pp = ProductsPage(self.driver)
         assert self.pp.AllProductsExists(),"All products page not loaded"
-        self.pp.search_box('men')
+        self.pp.search_box('women')
         assert self.pp.SearchedProductsExists(),"Searched products are not there"
         assert self.pp.SearchedProductsListExists(),"Search Products list is not there"
         product_titles = self.driver.find_elements(By.XPATH, "//div[@class='productinfo text-center']/p")
         # for product in product_titles:
         #     assert 'men' in product.text.casefold()
-        assert all("men" in product.text.casefold().split()
+        assert all("women" in product.text.casefold().split()
                    for product in product_titles),"Not all products are for men"

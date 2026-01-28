@@ -12,7 +12,7 @@ class Test_001_RegisterUser:
     logger = LogGen.getLogger()
 
     def test_register_user(self, setup):
-        self.logger.info("***test_001_AccountRegistration started***")
+        self.logger.info("***test_0002_AccountRegistration started***")
         self.driver = setup
         self.logger.info("***Launching Application***")
         self.driver.get(self.baseUrl)
