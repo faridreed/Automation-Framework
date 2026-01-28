@@ -36,7 +36,6 @@ def setup(browser):
 
     driver.maximize_window()
     yield driver
-    driver.quit()
 
 def pytest_addoption(parser):     # Getting the value from CLI/Hooks
     parser.addoption("--browser")

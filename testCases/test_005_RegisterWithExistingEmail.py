@@ -25,6 +25,6 @@ class Test_005_RegisterWithExistingEmail:
         self.lp = Login_Reg_Page(self.driver)
         assert self.lp.NewUserSignUpExists(),"New User Signup is not visible"
         self.lp.register_name('Freddy')
-        self.lp.register_email('freddy777@gmail.com')
+        self.lp.register_email('freddy0004@gmail.com')
         self.lp.click_reg_button()
         assert self.lp.EmailAlreadyExistsVisible(),"Email already exist text is not visible"
