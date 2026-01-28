@@ -9,28 +9,34 @@ from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
 
-os.environ["WDM_LOCAL"] = "1"
-os.environ["WDM_CACHE_DIR"] = r"C:\wdm-cache"
 
 @pytest.fixture
 def setup(browser):
-
     if browser == "chrome":
-        serv_obj = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=serv_obj)
-        print("Launching Edge")
-
-    elif browser == "edge":
-        serv_obj = Service(EdgeChromiumDriverManager().install())
-        driver = webdriver.Edge(service=serv_obj)
+        opts = ChromeOptions()
+        opts.add_argument("--headless=new")
+        driver = webdriver.Chrome(options=opts)
         print("Launching Chrome")
 
+    elif browser == "edge":
+        opts = EdgeOptions()
+        opts.add_argument("--headless=new")
+        driver = webdriver.Edge(options=opts)
+        print("Launching Edge")
+
     else:
-        serv_obj = FirefoxService(GeckoDriverManager().install())
-        driver = webdriver.Firefox(service=serv_obj)
+        opts = FirefoxOptions()
+        opts.add_argument("-headless")
+        driver = webdriver.Firefox(options=opts)
         print("Launching Firefox")
+
+    driver.maximize_window()
+    yield driver
+    driver.quit()
 
 def pytest_addoption(parser):     # Getting the value from CLI/Hooks
     parser.addoption("--browser")
