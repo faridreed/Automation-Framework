@@ -1,46 +1,38 @@
 import pytest
 import os
 import time
-from selenium.webdriver.common.by import By
+from pageObjects.CheckoutPage import CheckoutPage
+from pageObjects.PaymentPage import PaymentPage
+from pageObjects.CartPage import CartPage
 from pageObjects.HomePage import HomePage
 from pageObjects.Login_Reg_Page import Login_Reg_Page
-from pageObjects.CheckoutPage import CheckoutPage
-from pageObjects.ProductsPage import ProductsPage
 from pageObjects.RegistrationPage import RegistrationPage
-from pageObjects.CartPage import CartPage
-from pageObjects.PaymentPage import PaymentPage
 from utilities.testProperties import ReadConfig
 from utilities.customLogger import LogGen
 from utilities.randomString import random_email
 
-class Test_014_PlaceOrderRegister:
+class Test_015_RegisterBeforePlaceOrder:
     baseUrl = ReadConfig.getApplicationURL()
     logger = LogGen.getLogger()
 
-    def test_place_order_register(self,setup):
-        self.logger.info("***test_014_PlaceOrderRegister started***")
+    def test_register_before_order(self, setup):
+        self.logger.info("***test_015_RegisterBeforePlaceOrder started***")
         self.driver = setup
         self.logger.info("***Launching Application***")
         self.driver.get(self.baseUrl)
         self.driver.maximize_window()
 
-        self.hp = HomePage(self.driver)
-        self.pp = ProductsPage(self.driver)
-        assert self.hp.HomePageExists(), "Home Page is not visible"
-        self.hp.scroll_to_target(self.hp.button_first_product_cart_xpath)
-        self.hp.click(self.hp.button_first_product_cart_xpath)
-        self.pp.click_continue_shopping()
-        self.hp.click_cart()
 
-        self.cart_page = CartPage(self.driver)
-        assert self.cart_page.ShoppingCartExists(),"Not on the shopping cart page"
-        self.cart_page.click_checkout()
-        self.cart_page.click_register_login()
+        self.hp = HomePage(self.driver)
+        assert self.hp.HomePageExists(),"Home Page is not visible"
+        self.hp.click_reg_login()
 
         self.lp = Login_Reg_Page(self.driver)
+        assert self.lp.NewUserSignUpExists(),"New User Signup is not visible"
         self.lp.register_name('Freddy')
         self.lp.register_email(random_email())
         self.lp.click_reg_button()
+
 
         self.rp = RegistrationPage(self.driver)
         self.rp.select_gender('Mr.')
@@ -62,23 +54,23 @@ class Test_014_PlaceOrderRegister:
         self.rp.write_zipcode('1001')
         self.rp.write_mobile_number('9855885842')
         self.rp.click_create_account()
-        assert self.rp.account_created_exists()
-        self.hp.clean_google_ads()
         self.rp.click_continue()
-        self.hp.clean_google_ads()
 
-        if self.driver.current_url != "https://www.automationexercise.com/":
-            self.driver.get("https://www.automationexercise.com/")
-
+        assert self.hp.ensure_home(), "Could not reach Home (vignette/ad kept redirecting)"
+        self.hp.close_home_ad()
         assert self.hp.LoggedInExists(), "Logged in text is not there"
+        self.hp.scroll_to_target(self.hp.button_first_product_cart_xpath)
+        self.hp.click(self.hp.button_first_product_cart_xpath)
         self.hp.click_cart()
 
+        self.cart_page = CartPage(self.driver)
+        assert self.cart_page.ShoppingCartExists(),"Shopping cart is not visible"
         self.cart_page.click_checkout()
 
         self.checkout_page = CheckoutPage(self.driver)
-        assert self.checkout_page.verify_address1('123 Jacksonville Dr.'),"Address is not correct"
+        assert self.checkout_page.verify_address1('123 Jacksonville Dr.'), "Address is not correct"
         self.hp.scroll_to_target(self.checkout_page.txt_review_order_xpath)
-        assert self.checkout_page.verify_review_order(),"Review Order text is not there"
+        assert self.checkout_page.verify_review_order(), "Review Order text is not there"
         self.hp.scroll_to_target(self.checkout_page.txtbox_comment_xpath)
         self.checkout_page.write_comment('Make it quick')
         self.checkout_page.click_place_order()
@@ -87,10 +79,10 @@ class Test_014_PlaceOrderRegister:
         self.payment_page.write_name('Fred')
         self.payment_page.write_card_number('111222333')
         self.payment_page.write_cvc('333')
-        self.payment_page.write_exp_date('05','2033')
+        self.payment_page.write_exp_date('05', '2033')
         self.payment_page.click_pay()
+        self.payment_page.OrderPlacedSuccessMessageExists(), "Order placed successfully message is not visible"
 
         self.hp.delete_account()
         assert self.hp.account_deleted_confirmation(), "Account not deleted"
         self.hp.continue_after_deleting()
-

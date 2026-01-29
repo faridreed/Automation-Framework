@@ -23,7 +23,7 @@ class Test_002_Correct_Login:
 
         self.lp = Login_Reg_Page(self.driver)
         assert self.lp.LoginExists(),"Login text is not visible"
-        self.lp.login_email('freddy0004@gmail.com')
+        self.lp.login_email('freddy007@gmail.com')
         self.lp.login_password('freddy777')
         self.lp.click_login_button()
 

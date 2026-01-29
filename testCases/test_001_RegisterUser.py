@@ -6,13 +6,14 @@ from pageObjects.Login_Reg_Page import Login_Reg_Page
 from pageObjects.RegistrationPage import RegistrationPage
 from utilities.testProperties import ReadConfig
 from utilities.customLogger import LogGen
+from utilities.randomString import random_email
 
 class Test_001_RegisterUser:
     baseUrl = ReadConfig.getApplicationURL()
     logger = LogGen.getLogger()
 
     def test_register_user(self, setup):
-        self.logger.info("***test_002_AccountRegistration started***")
+        self.logger.info("***test_001_AccountRegistration started***")
         self.driver = setup
         self.logger.info("***Launching Application***")
         self.driver.get(self.baseUrl)
@@ -26,7 +27,7 @@ class Test_001_RegisterUser:
         self.lp = Login_Reg_Page(self.driver)
         assert self.lp.NewUserSignUpExists(),"New User Signup is not visible"
         self.lp.register_name('Freddy')
-        self.lp.register_email('freddy0004@gmail.com')
+        self.lp.register_email(random_email())
         self.lp.click_reg_button()
 
 

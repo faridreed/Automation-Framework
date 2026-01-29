@@ -23,8 +23,8 @@ class Test_011_VerifySubInCartPage:
         self.hp.click_cart()
         self.hp.scroll_to_bottom()
         assert self.hp.SubscriptionTextExists()
-        self.hp.write_subscription_email('freddy777@gmail.com')
+        self.hp.write_subscription_email('freddy006@gmail.com')
         self.hp.click_subcription_button()
-        assert self.hp.SubscriptionSuccessAlertExists()
-        self.hp
+        assert self.hp.SubscriptionSuccessAlertExists(), "Subscription Alert is not visible"
+
 

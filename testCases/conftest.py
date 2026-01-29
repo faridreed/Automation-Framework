@@ -15,30 +15,46 @@ from selenium.webdriver.firefox.service import Service as FirefoxService
 
 
 @pytest.fixture
-def setup(browser):
+def setup(request, browser):
+    headless = request.config.getoption("--headless")
+
     if browser == "chrome":
         opts = ChromeOptions()
-        opts.add_argument("--headless=new")
+        if headless:
+            opts.add_argument("--headless=new")
         driver = webdriver.Chrome(options=opts)
-        print("Launching Chrome")
 
     elif browser == "edge":
         opts = EdgeOptions()
-        opts.add_argument("--headless=new")
+        if headless:
+            opts.add_argument("--headless=new")
         driver = webdriver.Edge(options=opts)
-        print("Launching Edge")
 
     else:
         opts = FirefoxOptions()
-        opts.add_argument("-headless")
+        if headless:
+            opts.add_argument("-headless")
         driver = webdriver.Firefox(options=opts)
-        print("Launching Firefox")
 
     driver.maximize_window()
     yield driver
+    driver.quit()
 
-def pytest_addoption(parser):     # Getting the value from CLI/Hooks
-    parser.addoption("--browser")
+def pytest_addoption(parser):
+    parser.addoption(
+        "--browser",
+        action="store",
+        default="firefox",
+        help="Browser to run tests on: chrome, edge, firefox"
+    )
+    parser.addoption(
+        "--headless",
+        action="store_true",
+        default=False,
+        help="Run browsers in headless mode"
+    )
+
+
 
 @pytest.fixture
 def browser(request):            #Returning the Browser value to Setup method

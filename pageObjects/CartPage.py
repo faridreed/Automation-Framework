@@ -7,7 +7,6 @@ class CartPage:
 
     lst_all_product_titles = "(//h4)/a"
     txt_price_xpath = "//td[@class='price']"
-    txt_quantity_xpath = "//td[@class='quantity']"
     txt_total_xpath = "//td[@class='total']"
     txt_quantity_xpath = "/html/body/section/div/div[2]/table/tbody/tr/td[4]/button"
     txt_shop_cart_xpath = "//li[@class='active']"
@@ -29,7 +28,8 @@ class CartPage:
         return qtt == str(expected_quantity)
 
     def click_checkout(self):
-        self.driver.find_element(By.XPATH, self.button_checkout_xpath).click()
+        (WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable
+                                              ((By.XPATH, self.button_checkout_xpath ))).click())
 
     def click_register_login(self):
         self.driver.find_element(By.XPATH, self.button_reg_login_xpath).click()
