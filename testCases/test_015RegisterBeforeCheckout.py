@@ -6,17 +6,18 @@ from pageObjects.PaymentPage import PaymentPage
 from pageObjects.CartPage import CartPage
 from pageObjects.HomePage import HomePage
 from pageObjects.Login_Reg_Page import Login_Reg_Page
+from pageObjects.ProductsPage import ProductsPage
 from pageObjects.RegistrationPage import RegistrationPage
 from utilities.testProperties import ReadConfig
 from utilities.customLogger import LogGen
 from utilities.randomString import random_email
 
-class Test_015_RegisterBeforePlaceOrder:
+class Test_015_RegisterBeforeCheckout:
     baseUrl = ReadConfig.getApplicationURL()
     logger = LogGen.getLogger()
 
-    def test_register_before_order(self, setup):
-        self.logger.info("***test_015_RegisterBeforePlaceOrder started***")
+    def test_register_before_checkout(self, setup):
+        self.logger.info("***test_015_RegisterBeforeCheckout started***")
         self.driver = setup
         self.logger.info("***Launching Application***")
         self.driver.get(self.baseUrl)
@@ -56,11 +57,14 @@ class Test_015_RegisterBeforePlaceOrder:
         self.rp.click_create_account()
         self.rp.click_continue()
 
+        self.pp = ProductsPage(self.driver)
         assert self.hp.ensure_home(), "Could not reach Home (vignette/ad kept redirecting)"
         self.hp.close_home_ad()
         assert self.hp.LoggedInExists(), "Logged in text is not there"
         self.hp.scroll_to_target(self.hp.button_first_product_cart_xpath)
         self.hp.click(self.hp.button_first_product_cart_xpath)
+        self.pp.click_continue_shopping()
+        self.hp.scroll_to_target(self.hp.lnk_cart_xpath)
         self.hp.click_cart()
 
         self.cart_page = CartPage(self.driver)
@@ -81,7 +85,7 @@ class Test_015_RegisterBeforePlaceOrder:
         self.payment_page.write_cvc('333')
         self.payment_page.write_exp_date('05', '2033')
         self.payment_page.click_pay()
-        self.payment_page.OrderPlacedSuccessMessageExists(), "Order placed successfully message is not visible"
+        assert self.payment_page.OrderPlacedMessageExists(), "Order placed successfully message is not visible"
 
         self.hp.delete_account()
         assert self.hp.account_deleted_confirmation(), "Account not deleted"

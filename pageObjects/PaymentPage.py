@@ -1,5 +1,7 @@
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.expected_conditions import element_to_be_clickable, visibility_of_element_located
 from selenium.webdriver.support.wait import WebDriverWait
 
 class PaymentPage:
@@ -12,7 +14,7 @@ class PaymentPage:
 
     button_pay_xpath = "//button[@id='submit']"
 
-    txt_order_success_message = "//div[contains(text(),'Your order has been placed successfully!')]"
+    txt_order_placed_message = "//b[normalize-space()='Order Placed!']"
 
 
 
@@ -35,8 +37,13 @@ class PaymentPage:
     def click_pay(self):
         self.driver.find_element(By.XPATH, self.button_pay_xpath).click()
 
-    def OrderPlacedSuccessMessageExists(self):
+    def OrderPlacedMessageExists(self, timeout=10):
         try:
-            return self.driver.find_element(By.XPATH, self.txt_order_success_message).is_displayed()
-        except:
+            WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, self.txt_order_placed_message)
+                )
+            )
+            return True
+        except TimeoutException:
             return False
